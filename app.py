@@ -177,5 +177,34 @@ def apiDelete():
     return jsonify({'msg': '{target} 삭제되었습니다.'.format(target=target)})
 
 
+@app.route('/api/add-comment', methods=['POST'])
+def addComment():
+    # 현재 접속중인 사람이 누군지 알기 위해서 토큰 복호화
+    token = request.cookies.get('mytoken')
+    payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+    user = db.users.find_one({"id": payload['id']})
+    owner = db.postings.find_one({"title": request.form['owner']})
+    comment = request.form['comment']
+
+    document = {
+        "comment": comment,
+        "author": user['_id'],
+        "owner": owner['_id']
+    }
+    # db comments collection에 저장
+    result = db.comments.insert_one(document)
+
+    # users collection에 저장
+    db.users.update_one(user, {'$push': {
+        "comments": ObjectId(result.inserted_id)
+    }})
+
+    # postings collection에 저장
+    db.collections.update_one(
+        owner, {'$push': {"comments": result.inserted_id}})
+
+    return jsonify({'result': "success", 'msg': '댓글 추가 완료!'})
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
