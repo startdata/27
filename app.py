@@ -4,6 +4,7 @@ import jwt
 import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
+from bson.objectid import ObjectId
 
 from flask import Flask, render_template, jsonify, request
 
@@ -57,14 +58,6 @@ def addDislike():
     }})
     return jsonify({'msg': '{target} 싫어요!'.format(target=target)})
 
-# delete a post
-
-
-@app.route('/api/delete', methods=['POST'])
-def delete_star():
-    target = request.form['target']
-    db.mystar.find_one_and_delete({"name": target})
-    return jsonify({'msg': '{target} 삭제되었습니다.}'.format(target=target)})
 
 # register
 
@@ -142,7 +135,7 @@ def apiPosting():
     title = soup.select_one(
         '#content > div.article > div.mv_info_area > div.mv_info > h3 > a:nth-child(1)').text
 
-    # db.title collection에 저장하기
+    # db.postings collection에 저장하기
     posting = {
         "title": title,
         "url": url,
@@ -158,6 +151,30 @@ def apiPosting():
     # user = db.users.find_one_and_update(
     #     {'id': payload['id']}, {"$push": {'posts': url}})
     return jsonify({'result': "success", 'msg': '포스팅 완료!'})
+
+
+@app.route('/api/delete', methods=['POST'])
+def apiDelete():
+    # 현재 접속중인 사람이 누군지 알기 위해서 토큰 복호화
+    token = request.cookies.get('mytoken')
+    payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+    user = db.users.find_one({"id": payload['id']})
+
+    print(user['_id'])
+    target = request.form['title']
+    # postings collection 에서 삭제
+    post = db.postings.find_one({"title": target, "owner": user['_id']})
+    # 쿼리에 dictionary 타입을 쓸 수 없는데, 그래서 ObjectId 타입을 string으로 변환
+    # 그리고 그걸 다시 ObjectId 타입으로 변환해서 쿼리에 사용
+    postId = str(post['_id'])
+    db.postings.delete_one(post)
+    # result = db.postings.find_one_and_delete(
+    #     {"title": target, "owner": user['_id']})
+    # print(result)
+    print(postId)
+    db.users.update_one(user, {'$pull': {
+        'posts': ObjectId(postId)}})
+    return jsonify({'msg': '{target} 삭제되었습니다.'.format(target=target)})
 
 
 if __name__ == '__main__':
