@@ -1,16 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="../static/movie.ico">
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
+    </script>
+
+    <!-- Cookie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js">
+    </script>
+
+    <script>
+        const handleLogin = () => {
+            $.ajax({
+                type: "POST",
+                url: "/api/login",
+                data: { 
+                    id_give: $('#userId').val(), 
+                    pw_give: $('#userPw').val() 
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
+                        // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
+                        $.cookie('mytoken', response['token']);
+
+                        alert('로그인 완료!')
+                        window.location.href = '/'
+                    } else {
+                        // 로그인이 안되면 에러메시지를 띄웁니다.
+                        alert(response['msg'])
+                    }
+                }
+            })
+        }
     </script>
 
 
@@ -19,9 +55,11 @@
         @import url('https://fonts.googleapis.com/css?family=Nunito');
         @import url('https://fonts.googleapis.com/css?family=Poiret+One');
 
-        body, html {
+        body,
+        html {
             height: 100%;
-            background-repeat: no-repeat; /*background-image: linear-gradient(rgb(12, 97, 33),rgb(104, 145, 162));*/
+            background-repeat: no-repeat;
+            /*background-image: linear-gradient(rgb(12, 97, 33),rgb(104, 145, 162));*/
             background: black;
             position: relative;
         }
@@ -33,7 +71,7 @@
             transform: translateX(-50%);
             width: 350px;
             margin: auto;
-            background:  black;
+            background: black;
             min-height: 250px;
             padding: 20px;
             z-index: 9999;
@@ -78,7 +116,7 @@
             border-bottom-right-radius: 2px;
         }
 
-     
+
         #login-box button.btn-custom {
             border-radius: 2px;
             margin-top: 8px;
@@ -90,14 +128,15 @@
 
         .btn-custom2 {
             background-color: #1877F2;
+
             color: white;
         }
 
-        .username{
+        .username {
             width: 100%;
         }
 
-        .password{
+        .password {
             width: 100%;
 
         }
@@ -129,74 +168,33 @@
         }
     </style>
 
-    <script type="text/javascript">
-        function go_url() {
-            location.href = "/main"
-        }
-
-        function f() {
-
-            $.ajax({
-                    type: "GET",
-                    url: "/login",
-                    data: {},
-                    success: function (response) {
-
-                        var userid = $("#id2").val() // userid 의 값을 받아와 넣음.
-                        var userpw = $("#pw2").val() // userpw 의 값을 받아와 넣음.
-                        var list = response['all_reviews']
-                        var idget = [];
-                        var pwget = [];
-                        var i = 0;
-                        for (i = 0; i < list.length; i++) {
-                            idget[i] = list[i]['id']
-                            pwget[i] = list[i]['pw']
-                        }
-                        console.log(idget, pwget)
-
-                        if (idget.includes(userid) && pwget.includes(userpw)) {
-                            swal({
-                                title: "로그인 완료!",
-                                text: "",
-                                icon: "success",
-                            });
-                            setTimeout('go_url()', 1000)
-                        } else {
-                            swal({
-                                title: "로그인 실패!",
-                                text: "아이디 및 비밀번호 오류입니다!",
-                                icon: "error",
-                            });
-                        }
-                    }
-                }
-            )
-        }
-
-    </script>
 
     <title>리뷰진심 로그인</title>
 </head>
+
 <body>
-<div class="container">
-    <div id="login-box">
-        <div class="logo">
-            <img src="../static/logo.png" class="moive"/>
-            <h1 class="logo-caption"><span class="context">L</span>ogin</h1>
-        </div><!-- /.logo -->
-        <div class="controls">
-            <form name="login" action="/login" method="GET">
-                <input type="text" id="id2" name="id2" placeholder="Username" class="username"/>
-                <input type="password" id="pw2" name="pw2" placeholder="Password" class="password"/>
-                <button type="button" class="btn btn-default btn-block btn-custom"
-                        value="login" onclick="f()">Login
-                </button>
-                <a href="/index" button type="button" class="btn btn-default btn-block btn-custom2">Sign
-                    Up</button></a>
-            </form>
-        </div><!-- /.controls -->
-    </div><!-- /#login-box -->
-</div><!-- /.container -->
-<div id="particles-js"></div>
+    <div class="container">
+        <div id="login-box">
+            <div class="logo">
+                <img src="../static/logo.png" class="moive" />
+                <h1 class="logo-caption"><span class="context">L</span>ogin</h1>
+            </div><!-- /.logo -->
+            <div class="controls">
+                <form name="login">
+                    <input type="text" id="userId" name="id2" placeholder="Username" class="username" />
+                    <input type="password" id="userPw" name="pw2" placeholder="Password" class="password" />
+                    <button type="button" class="btn btn-default btn-block btn-custom" onclick="handleLogin()">Login
+                    </button>
+
+                    <a href="/join">
+                        <button type="button" class="btn btn-default btn-block btn-custom2">Sign
+                            Up</button>
+                    </a>
+                </form>
+            </div><!-- /.controls -->
+        </div><!-- /#login-box -->
+    </div><!-- /.container -->
+    <div id="particles-js"></div>
 </body>
+
 </html>
