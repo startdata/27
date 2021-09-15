@@ -26,7 +26,8 @@ headers = {
 
 @app.route('/')
 def home():
-    return render_template('main.html')
+    postings = list(db.postings.find({}))
+    return render_template('main.html', postings=postings)
 
 
 @app.route('/login')
@@ -75,10 +76,10 @@ def newSignup():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
 
-    if db.users.find({"id": id_receive}) != None:
+    if db.users.find({"id": id_receive}).count() > 0:
         return jsonify({
             "result": "failure",
-            "msg": "이미 존재하는 계정입니다."
+            "msg": "12312이미 존재하는 계정입니다."
         })
 
     hashedPw = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
@@ -142,8 +143,8 @@ def apiPosting():
         '#content > div.article > div.mv_info_area > div.mv_info > h3 > a:nth-child(1)').text
 
     # 중복 확인
-    if db.postings.find({"title": title}) != None:
-        return redirect(url_for("home", msg="이미 존재하는 영화입니다."))
+    # if db.postings.find({"title": title}) != None:
+    #     return redirect(url_for("home"))
 
     description = soup.select_one(
         '#content > div.article > div.section_group.section_group_frst > div:nth-child(1) > div > div.story_area > p').text
@@ -155,6 +156,8 @@ def apiPosting():
     for genre in genres:
         genresArray.append(genre.text)
 
+    imageUrl = soup.select_one(
+        '#content > div.article > div.mv_info_area > div.poster > a > img')['src']
     # db.postings collection에 저장하기
     posting = {
         "url": url,
@@ -164,7 +167,8 @@ def apiPosting():
         "dislike": 0,
         "owner": user["id"],
         "comments": [],
-        "genres": genresArray
+        "genres": genresArray,
+        "imageUrl": imageUrl
     }
 
     db.postings.insert_one(posting)
