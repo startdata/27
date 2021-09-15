@@ -24,7 +24,6 @@
     <meta property="og:image" content="">
     <meta property="og:url" content="">
     <!-- Javascript -->
-    <script defer src="../static/index.js"></script>
     <script defer src="../static/animation.js"></script>
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
@@ -69,20 +68,18 @@
                 },
             });
         }
-
         const handleUpload = () => {
             $.ajax({
                 type: "POST",
                 url: "/api/url",
                 data: {
-                    url: 'https://movie.naver.com/movie/bi/mi/basic.naver?code=185614'
+                    url: 'https://movie.naver.com/movie/bi/mi/basic.naver?code=201680'
                 },
                 success: function (response) {
                     console.log(response);
                 },
             });
         }
-
     </script>
 
     <style>
@@ -169,21 +166,15 @@
                 </div>
                 <div class="list-over">
                     <div class="list-grid" id="romance-grid">
-                        <a href="/romence_one"><img
-                                src="https://movie-phinf.pstatic.net/20210827_68/1630026769778eMjDM_JPEG/movie_image.jpg"
+                        {% for posting in postings %}
+                            {% if ("로맨스" in posting["genres"]) %}
+                                {% set imgUrl = posting["imageUrl"]%}
+                                {% set url = posting["url"]%}
+                                <a href="{{url}}"><img
+                                src="{{imgUrl}}"
                                 alt=""></a>
-                        <a href="/romence_two"><img
-                                src="https://movie-phinf.pstatic.net/20210810_289/1628563106681xBLuF_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/romence_three"><img
-                                src="https://movie-phinf.pstatic.net/20210818_151/1629254256149bHEBu_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/romence_four"><img
-                                src="https://movie-phinf.pstatic.net/20210823_224/1629705758527Laio4_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/romence_five"><img
-                                src="https://movie-phinf.pstatic.net/20210826_216/1629939486465RfQzD_JPEG/movie_image.jpg"
-                                alt=""></a>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -194,21 +185,15 @@
                 </div>
                 <div class="list-over">
                     <div class="list-grid" id="action-grid">
-                        <a href="/action_one"><img
-                                src="https://movie-phinf.pstatic.net/20210825_8/1629879510900xEwsL_JPEG/movie_image.jpg"
+                        {% for posting in postings %}
+                            {% if ("액션" in posting["genres"]) %}
+                                {% set imgUrl = posting["imageUrl"]%}
+                                {% set url = posting["url"]%}
+                                <a href="{{url}}"><img
+                                src="{{imgUrl}}"
                                 alt=""></a>
-                        <a href="/action_two"><img
-                                src="https://movie-phinf.pstatic.net/20210810_48/1628580090915xW3Yd_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/action_three"><img
-                                src="https://movie-phinf.pstatic.net/20210902_277/1630565403668BgRSB_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/action_four"><img
-                                src="https://movie-phinf.pstatic.net/20210714_30/16262486171225Il6s_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/action_five"><img
-                                src="https://movie-phinf.pstatic.net/20210903_120/1630637262749GjJyG_JPEG/movie_image.jpg"
-                                alt=""></a>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -220,21 +205,15 @@
                 </div>
                 <div class="list-over">
                     <div class="list-grid" id="ani-grid">
-                        <a href="/ani_one"><img
-                                src="https://movie-phinf.pstatic.net/20210813_188/1628819089886yaWaC_JPEG/movie_image.jpg"
+                        {% for posting in postings %}
+                            {% if ("애니메이션" in posting["genres"]) %}
+                                {% set imgUrl = posting["imageUrl"]%}
+                                {% set url = posting["url"]%}
+                                <a href="{{url}}"><img
+                                src="{{imgUrl}}"
                                 alt=""></a>
-                        <a href="/ani_two"><img
-                                src="https://movie-phinf.pstatic.net/20210902_69/1630551063783FBxOi_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/ani_three"><img
-                                src="https://movie-phinf.pstatic.net/20210819_75/1629349842810OQ3u0_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/ani_four"><img
-                                src="https://movie-phinf.pstatic.net/20210831_220/1630376391008ok45u_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/ani_five"><img
-                                src="https://movie-phinf.pstatic.net/20171212_172/1513041917211ymzov_JPEG/movie_image.jpg"
-                                alt=""></a>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -245,21 +224,15 @@
                 </div>
                 <div class="list-over">
                     <div class="list-grid" id="thriller-grid">
-                        <a href="/thriller_one"><img
-                                src="https://movie-phinf.pstatic.net/20210831_152/1630371935224qy9s6_JPEG/movie_image.jpg"
+                        {% for posting in postings %}
+                            {% if ("스릴러" in posting["genres"]) %}
+                                {% set imgUrl = posting["imageUrl"]%}
+                                {% set url = posting["url"]%}
+                                <a href="{{url}}"><img
+                                src="{{imgUrl}}"
                                 alt=""></a>
-                        <a href="/thriller_two"><img
-                                src="https://movie-phinf.pstatic.net/20210820_74/1629427795611LSgpT_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/thriller_three"><img
-                                src="https://movie-phinf.pstatic.net/20210824_39/1629773762036jdIlI_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/thriller_four"><img
-                                src="https://movie-phinf.pstatic.net/20210726_114/1627265960693kkM0B_JPEG/movie_image.jpg"
-                                alt=""></a>
-                        <a href="/thriller_five"><img
-                                src="https://movie-phinf.pstatic.net/20210818_108/1629261577888Jpxk1_JPEG/movie_image.jpg"
-                                alt=""></a>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
 
