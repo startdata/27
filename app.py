@@ -1,6 +1,5 @@
 import datetime
 import hashlib
-from bson.objectid import ObjectId
 import requests
 import jwt
 from pymongo import MongoClient
@@ -72,11 +71,12 @@ def addDislike():
 
 @app.route('/api/join', methods=['POST'])
 def newSignup():
-    id = request.form['id']
-    pw = request.form['pw']
-    hashedPw = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+    id_receive = request.form['id_give']
+    pw_receive = request.form['pw_give']
+    print(id_receive, pw_receive)
+    hashedPw = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
     user = {
-        "id": id,
+        "id": id_receive,
         "hashedPw": hashedPw,
         "postings": [],
     }
@@ -95,13 +95,13 @@ def newSignup():
 
 @app.route('/api/login', methods=['POST'])
 def apiLogin():
-    id = request.form['id']
-    pw = request.form['pw']
+    id_receive = request.form['id_give']
+    pw_receive = request.form['pw_give']
 
     # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
-    hashedPw = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+    hashedPw = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-    user = db.users.find_one({'id': id, 'pw': hashedPw})
+    user = db.users.find_one({'id': id_receive, 'hashedPw': hashedPw})
     if user is not None:
         payload = {
             'id': user["id"],
@@ -118,6 +118,7 @@ def apiLogin():
 
 @app.route('/api/logout', methods=['POST'])
 def apiLogout():
+    print(request.cookies.get('mytoken'), "Hello")
     return jsonify({'result': "success", 'msg': '로그아웃되었습니다'})
 
 
@@ -146,7 +147,8 @@ def apiPosting():
         "owner": user["id"],
         "comments": []
     }
-    result = db.postings.insert_one(posting)
+
+    db.postings.insert_one(posting)
 
     # user에도 저장하기
     db.users.update_one(
