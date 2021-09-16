@@ -30,7 +30,14 @@ def home():
     postings = list(db.postings.find({}))
     for posting in postings:
         posting["_id"] = str(posting["_id"])
-    return render_template('main.html', postings=postings)
+
+    # 로그인, 로그아웃 텍스트 바꾸기 위해 토큰 확인
+    try:
+        token_receive = request.cookies.get('mytoken')
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        return render_template('main.html', postings=postings, isLoggedIn=True)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return render_template('main.html', postings=postings, isLoggedIn=False)
 
 
 @app.route('/login')
@@ -62,15 +69,14 @@ def detail(postingId):
 @app.route('/api/like', methods=['POST'])
 def addLike():
     postingId = request.form['postingId']
-    print(postingId)
     try:
         foundPosting = db.postings.find_one_and_update({"_id": ObjectId(postingId)}, {'$inc': {
             "like": 1
         }})
-        print(foundPosting["like"])
-    except:
-        print("오류 발생")
-    return jsonify({'msg': '{target} 좋아요!'.format(target=foundPosting["title"])})
+        return jsonify({'msg': '{target} 좋아요!'.format(target=foundPosting["title"])})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
+
 
 # add dislike
 
@@ -84,9 +90,9 @@ def addDislike():
             "dislike": 1
         }})
         print(foundPosting["dislike"])
-    except:
-        print("오류 발생")
-    return jsonify({'msg': '{target} 싫어요!'.format(target=foundPosting["title"])})
+        return jsonify({'msg': '{target} 싫어요!'.format(target=foundPosting["title"])})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
 
 
 # register
@@ -109,10 +115,7 @@ def newSignup():
         "hashedPw": hashedPw,
         "postings": [],
     }
-    try:
-        db.users.insert_one(user)
-    except:
-        print("오류 발생")
+    db.users.insert_one(user)
 
     return jsonify({
         'result': 'success',

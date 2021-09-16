@@ -84,6 +84,7 @@
         }
 
         const handleClickDislike = () => {
+            // 현재 비디오의 id를 data attribute를 이용해서 가져오기
             const id = document.getElementById("postingContainer").getAttribute("data-postingid");
             $.ajax({
                 type: "POST",
