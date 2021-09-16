@@ -5,6 +5,7 @@ import requests
 import jwt
 from pymongo import MongoClient
 from bs4 import BeautifulSoup
+from bson.objectid import ObjectId
 
 from flask import Flask, render_template, jsonify, request
 from requests.api import post
@@ -27,6 +28,8 @@ headers = {
 @app.route('/')
 def home():
     postings = list(db.postings.find({}))
+    for posting in postings:
+        posting["_id"] = str(posting["_id"])
     return render_template('main.html', postings=postings)
 
 
@@ -39,33 +42,51 @@ def login():
 def singup():
     return render_template('join.html')
 
+
+@app.route('/detail/<postingId>')
+def detail(postingId):
+    print(postingId)
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        posting = db.postings.find_one({"_id": ObjectId(postingId)})
+        # 좋아요 수 변경
+        # print(posting)
+        return render_template('detail.html', posting=posting)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("login"))
+
 # add like
 
 
 @app.route('/api/like', methods=['POST'])
 def addLike():
-    title = request.form['title']
+    postingId = request.form['postingId']
+    print(postingId)
     try:
-        db.postings.find_one_and_update({"title": title}, {'$inc': {
+        foundPosting = db.postings.find_one_and_update({"_id": ObjectId(postingId)}, {'$inc': {
             "like": 1
         }})
+        print(foundPosting["like"])
     except:
         print("오류 발생")
-    return jsonify({'msg': '{target} 좋아요!'.format(target=title)})
+    return jsonify({'msg': '{target} 좋아요!'.format(target=foundPosting["title"])})
 
 # add dislike
 
 
 @app.route('/api/dislike', methods=['POST'])
 def addDislike():
-    title = request.form['title']
+    postingId = request.form['postingId']
+    print(postingId)
     try:
-        db.postings.find_one_and_update({"title": title}, {'$inc': {
+        foundPosting = db.postings.find_one_and_update({"_id": ObjectId(postingId)}, {'$inc': {
             "dislike": 1
         }})
+        print(foundPosting["dislike"])
     except:
         print("오류 발생")
-    return jsonify({'msg': '{target} 싫어요!'.format(target=title)})
+    return jsonify({'msg': '{target} 싫어요!'.format(target=foundPosting["title"])})
 
 
 # register
@@ -79,7 +100,7 @@ def newSignup():
     if db.users.find({"id": id_receive}).count() > 0:
         return jsonify({
             "result": "failure",
-            "msg": "12312이미 존재하는 계정입니다."
+            "msg": "이미 존재하는 계정입니다."
         })
 
     hashedPw = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
@@ -207,24 +228,28 @@ def apiDelete():
 
 @app.route('/api/add-comment', methods=['POST'])
 def addComment():
-    title = request.form['title']
-    message = request.form['comment']
+    # 타겟이 될 포스팅
+    id = request.form['id']
+    message = request.form['message']
 
-    token = request.cookies.get('mytoken')
-    payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-    userId = db.users.find_one({"id": payload['id']})["id"]
+    # 댓글 작성자를 알기 위해 토큰 가져오기
+    try:
+        token = request.cookies.get('mytoken')
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        userId = db.users.find_one({"id": payload['id']})["id"]
 
-    comment = {
-        "author": userId,
-        "message": message
-    }
+        comment = {
+            "author": userId,
+            "message": message
+        }
 
-    db.postings.find_one_and_update({"title": title}, {
-        '$push': {
-            "comments": comment}
-    })
-
-    return jsonify({'result': "success", 'msg': '댓글 추가 완료!'})
+        db.postings.find_one_and_update({"_id": ObjectId(id)}, {
+            '$push': {
+                "comments": comment}
+        })
+        return jsonify({'result': "success", 'msg': '댓글 추가 완료!'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 
 if __name__ == '__main__':
