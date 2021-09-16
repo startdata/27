@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="../static/movie.ico">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
+    </script>
+
+
+    <!------ Include the above in your HEAD tag ---------->
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Nunito');
+        @import url('https://fonts.googleapis.com/css?family=Poiret+One');
+
+        body, html {
+            height: 100%;
+            background-repeat: no-repeat; /*background-image: linear-gradient(rgb(12, 97, 33),rgb(104, 145, 162));*/
+            background: black;
+            position: relative;
+        }
+
+        #login-box {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 350px;
+            margin: auto;
+            background:  black;
+            min-height: 250px;
+            padding: 20px;
+            z-index: 9999;
+            display: block;
+        }
+
+        #login-box .logo .logo-caption {
+            font-family: 'Poiret One', cursive;
+            color: white;
+            text-align: center;
+            margin-bottom: 0px;
+        }
+
+        #login-box .logo .context {
+            color: #ffad7b;
+        }
+
+        #login-box .controls {
+            padding-top: 30px;
+        }
+
+        #login-box .controls input {
+            font-size: 17px;
+            border-radius: 0px;
+            background: whitesmoke;
+            border: 0px;
+            color: white;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #login-box .controls input:focus {
+            box-shadow: none;
+        }
+
+        #login-box .controls input:first-child {
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+        }
+
+        #login-box .controls input:last-child {
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+     
+        #login-box button.btn-custom {
+            border-radius: 2px;
+            margin-top: 8px;
+            background: #ff5252;
+            border-color: rgba(48, 46, 45, 1);
+            color: white;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .btn-custom2 {
+            background-color: #1877F2;
+            color: white;
+        }
+
+        .username{
+            width: 100%;
+        }
+
+        .password{
+            width: 100%;
+
+        }
+
+        #login-box button.btn-custom:hover {
+            -webkit-transition: all 500ms ease;
+            -moz-transition: all 500ms ease;
+            -ms-transition: all 500ms ease;
+            -o-transition: all 500ms ease;
+            transition: all 500ms ease;
+            background: rgba(48, 46, 45, 1);
+            border-color: #ff5252;
+        }
+
+        #particles-js {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: 50% 50%;
+            position: fixed;
+            top: 0px;
+            z-index: 1;
+        }
+
+        .moive {
+            width: 90px;
+            margin: auto;
+            display: block;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+        function go_url() {
+            location.href = "/main"
+        }
+
+        function f() {
+             var userid = $("#id2").val() // userid 의 값을 받아와 넣음.
+             var userpw = $("#pw2").val() // userpw 의 값을 받아와 넣음.
+
+            $.ajax({
+                    type: "GET",
+                    url: "/login",
+                    data: {},
+                    success: function (response) {
+
+                        var list = response['all_reviews']
+                        var idget = [];
+                        var pwget = [];
+                        var i = 0;
+                        for (i = 0; i < list.length; i++) {
+                            idget[i] = list[i]['id']
+                            pwget[i] = list[i]['pw']
+                        }
+                        console.log(idget, pwget)
+
+                        if (idget.includes(userid) && pwget.includes(userpw)) {
+                            swal({
+                                title: "로그인 완료!",
+                                text: "",
+                                icon: "success",
+                            });
+                            setTimeout('go_url()', 1000)
+                        } else {
+                            swal({
+                                title: "로그인 실패!",
+                                text: "아이디 및 비밀번호 오류입니다!",
+                                icon: "error",
+                            });
+                        }
+                    }
+                }
+            )
+        }
+
+    </script>
+
+    <title>리뷰진심 로그인</title>
+</head>
+<body>
+<div class="container">
+    <div id="login-box">
+        <div class="logo">
+            <img src="../static/logo.png" class="moive"/>
+            <h1 class="logo-caption"><span class="context">L</span>ogin</h1>
+        </div><!-- /.logo -->
+        <div class="controls">
+            <form name="login" action="/login" method="GET">
+                <input type="text" id="id2" name="id2" style="color :black; border-left: ;;" placeholder="Username" class="username"/>
+                <input type="password" id="pw2" name="pw2" style="color :black; placeholder="Password" class="password"/>
+                <button type="button" class="btn btn-default btn-block btn-custom"
+                        value="login" onclick="f()">Login
+                </button>
+                <a href="/index" button type="button" class="btn btn-default btn-block btn-custom2">Sign
+                    Up</button></a>
+            </form>
+        </div><!-- /.controls -->
+    </div><!-- /#login-box -->
+</div><!-- /.container -->
+<div id="particles-js"></div>
+</body>
+</html>
