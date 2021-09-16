@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Common Css -->
+    <link rel="stylesheet" href="../static/mypage.css">
+    <link rel="shortcut icon" href="../static/movie.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <title>진심리뷰 마이페이지</title>
+
+    <!-- Import Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <style>
+        .color {
+            color: black;
+        }
+
+        .font {
+            font-weight: bold;
+        }
+
+        .fontsize {
+            font-size: x-large;
+            font-family: 'Black Han Sans', sans-serif;
+        }
+
+    </style>
+
+    <script defer src="../static/java.js"></script>
+    <script defer src="../static/review.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+    </script>
+</head>
+
+<body>
+<div class="wrapper">
+    <header>
+        <div class="top-bar">
+            <span class="nav" onclick="openNav()">&#x2b;</span>
+            <div class="movie-logo">
+                <a class="logo" href="/main" style="cursor:auto">
+                    <img src="../static/logo.png" alt="HanSon-movie">
+                </a>
+            </div>
+            <textarea id="search" type="text" class="form-control" placeholder="검색" aria-label="Default"></textarea>
+            <div class="mypage">
+                <a href="/">마이페이지</a>
+            </div>
+            <div class="logout">
+                <a href="/">로그아웃</a>
+            </div>
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="/romence">로맨스</a>
+                <a href="/action">액션</a>
+                <a href="/ani">애니</a>
+                <a href="/thriller">스릴러</a>
+            </div>
+        </div>
+    </header>
+    <!-- End of Header -->
+
+    <!-- Main Container -->
+    <section class="main-container">
+
+        <div class="post-box">
+            <div class="controls">
+                <h1 class="url"><span>URL</span></h1>
+                <form name="login" action="/login" method="GET">
+                    <input type="text" id="posttext" name="id2" placeholder="Posting" class="posttext"/>
+                    <button type="button" class="btn btn-default btn-block btn-custom"
+                            value="posting" onclick="f()">포스팅하기
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="inner">
+            <div class="list-over">
+                <div class="list-grid">
+                    <div class="card">
+                        <a href="">
+                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5575%2F2021%2F07%2F02%2F0000211689_001_20210702080622940.jpg&type=a340"></a>
+                        <h1 class="cardtitle"><span>모가디슈</span></h1>
+                        <p class="card-text">내전으로 고립된 낯선 도시, 모가디슈
+                            지금부터 우리의 목표는 오로지 생존이다!
+
+                            대한민국이 UN가입을 위해 동분서주하던 시기
+                            1991년 소말리아의 수도 모가디슈에서는 일촉즉발의 내전이 일어난다.
+                            통신마저 끊긴 그 곳에 고립된 대한민국 대사관의 직원과 가족들은
+                            총알과 포탄이 빗발치는 가운데, 살아남기 위해 하루하루를 버텨낸다.
+                            그러던 어느 날 밤, 북한 대사관의 일행들이 도움을 요청하며 문을 두드리는데…
+
+                            목표는 하나, 모가디슈에서 탈출해야 한다!</p>
+                        <button type="button" class="btn btn-default btn-block btn-custom" id="delect"
+                                value="delect" onclick="f()">삭제하기
+                    </div>
+                    <div class="card">
+                        <a href="">
+                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5575%2F2021%2F07%2F02%2F0000211689_001_20210702080622940.jpg&type=a340"></a>
+                        <h1 class="cardtitle"><span>모가디슈</span></h1>
+                        <p class="card-text">내전으로 고립된 낯선 도시, 모가디슈
+                            지금부터 우리의 목표는 오로지 생존이다!
+
+                            대한민국이 UN가입을 위해 동분서주하던 시기
+                            1991년 소말리아의 수도 모가디슈에서는 일촉즉발의 내전이 일어난다.
+                            통신마저 끊긴 그 곳에 고립된 대한민국 대사관의 직원과 가족들은
+                            총알과 포탄이 빗발치는 가운데, 살아남기 위해 하루하루를 버텨낸다.
+                            그러던 어느 날 밤, 북한 대사관의 일행들이 도움을 요청하며 문을 두드리는데…
+
+                            목표는 하나, 모가디슈에서 탈출해야 한다!</p>
+                        <button type="button" class="btn btn-default btn-block btn-custom" id="delect"
+                                value="delect" onclick="f()">삭제하기
+                    </div>
+                    <div class="card">
+                        <a href="">
+                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5575%2F2021%2F07%2F02%2F0000211689_001_20210702080622940.jpg&type=a340"></a>
+                        <h1 class="cardtitle"><span>모가디슈</span></h1>
+                        <p class="card-text">내전으로 고립된 낯선 도시, 모가디슈
+                            지금부터 우리의 목표는 오로지 생존이다!
+
+                            대한민국이 UN가입을 위해 동분서주하던 시기
+                            1991년 소말리아의 수도 모가디슈에서는 일촉즉발의 내전이 일어난다.
+                            통신마저 끊긴 그 곳에 고립된 대한민국 대사관의 직원과 가족들은
+                            총알과 포탄이 빗발치는 가운데, 살아남기 위해 하루하루를 버텨낸다.
+                            그러던 어느 날 밤, 북한 대사관의 일행들이 도움을 요청하며 문을 두드리는데…
+
+                            목표는 하나, 모가디슈에서 탈출해야 한다!</p>
+                        <button type="button" class="btn btn-default btn-block btn-custom" id="delect"
+                                value="delect" onclick="f()">삭제하기
+                    </div>
+                    <div class="card">
+                        <a href="">
+                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5575%2F2021%2F07%2F02%2F0000211689_001_20210702080622940.jpg&type=a340"></a>
+                        <h1 class="cardtitle"><span>모가디슈</span></h1>
+                        <p class="card-text">내전으로 고립된 낯선 도시, 모가디슈
+                            지금부터 우리의 목표는 오로지 생존이다!
+
+                            대한민국이 UN가입을 위해 동분서주하던 시기
+                            1991년 소말리아의 수도 모가디슈에서는 일촉즉발의 내전이 일어난다.
+                            통신마저 끊긴 그 곳에 고립된 대한민국 대사관의 직원과 가족들은
+                            총알과 포탄이 빗발치는 가운데, 살아남기 위해 하루하루를 버텨낸다.
+                            그러던 어느 날 밤, 북한 대사관의 일행들이 도움을 요청하며 문을 두드리는데…
+
+                            목표는 하나, 모가디슈에서 탈출해야 한다!</p>
+                        <button type="button" class="btn btn-default btn-block btn-custom" id="delect"
+                                value="delect" onclick="f()">삭제하기
+                    </div>
+                    <div class="card">
+                        <a href="">
+                            <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5575%2F2021%2F07%2F02%2F0000211689_001_20210702080622940.jpg&type=a340"></a>
+                        <h1 class="cardtitle"><span>모가디슈</span></h1>
+                        <p class="card-text">내전으로 고립된 낯선 도시, 모가디슈
+                            지금부터 우리의 목표는 오로지 생존이다!
+
+                            대한민국이 UN가입을 위해 동분서주하던 시기
+                            1991년 소말리아의 수도 모가디슈에서는 일촉즉발의 내전이 일어난다.
+                            통신마저 끊긴 그 곳에 고립된 대한민국 대사관의 직원과 가족들은
+                            총알과 포탄이 빗발치는 가운데, 살아남기 위해 하루하루를 버텨낸다.
+                            그러던 어느 날 밤, 북한 대사관의 일행들이 도움을 요청하며 문을 두드리는데…
+
+                            목표는 하나, 모가디슈에서 탈출해야 한다!</p>
+                        <button type="button" class="btn btn-default btn-block btn-custom" id="delect"
+                                value="delect" onclick="f()">삭제하기
+                    </div>
+                </div>
+            </div>
+    </section>
+
+
+</body>
+</html>
