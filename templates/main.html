@@ -80,6 +80,9 @@
                 },
             });
         }
+
+
+
     </script>
 
     <style>
@@ -157,7 +160,6 @@
             </section>
 
             <!--movie-list-->
-
             <section class="list-box">
                 <h2 class="list-title" id="romance">로멘스</h2>
                 <div class="list-btn">
@@ -170,7 +172,7 @@
                             {% if ("로맨스" in posting["genres"]) %}
                                 {% set imgUrl = posting["imageUrl"]%}
                                 {% set url = posting["url"]%}
-                                <a href="{{url}}"><img
+                                <a href="/detail/{{posting['_id']}}"><img
                                 src="{{imgUrl}}"
                                 alt=""></a>
                             {% endif %}
@@ -189,7 +191,7 @@
                             {% if ("액션" in posting["genres"]) %}
                                 {% set imgUrl = posting["imageUrl"]%}
                                 {% set url = posting["url"]%}
-                                <a href="{{url}}"><img
+                                <a href="/detail/{{posting['_id']}}"><img
                                 src="{{imgUrl}}"
                                 alt=""></a>
                             {% endif %}
@@ -209,7 +211,7 @@
                             {% if ("애니메이션" in posting["genres"]) %}
                                 {% set imgUrl = posting["imageUrl"]%}
                                 {% set url = posting["url"]%}
-                                <a href="{{url}}"><img
+                                <a href="/detail/{{posting['_id']}}"><img
                                 src="{{imgUrl}}"
                                 alt=""></a>
                             {% endif %}
@@ -228,7 +230,7 @@
                             {% if ("스릴러" in posting["genres"]) %}
                                 {% set imgUrl = posting["imageUrl"]%}
                                 {% set url = posting["url"]%}
-                                <a href="{{url}}"><img
+                                <a href="/detail/{{posting['_id']}}"><img
                                 src="{{imgUrl}}"
                                 alt=""></a>
                             {% endif %}
