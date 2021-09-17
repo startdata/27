@@ -44,9 +44,9 @@ def login():
     return render_template("login.html")
 
 
-@app.route('/join')
+@app.route('/signup')
 def singup():
-    return render_template('join.html')
+    return render_template('signup.html')
 
 
 @app.route('/search')
@@ -61,16 +61,15 @@ def search():
 
 @app.route('/detail/<postingId>')
 def detail(postingId):
-    print(postingId)
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         posting = db.postings.find_one({"_id": ObjectId(postingId)})
         # 좋아요 수 변경
         # print(posting)
-        return render_template('detail.html', posting=posting)
+        return render_template('detail.html', posting=posting, isLoggedIn=True)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("login"))
+        return redirect(url_for("home"))
 
 # add like
 
@@ -107,29 +106,33 @@ def addDislike():
 # register
 
 
-@app.route('/api/join', methods=['POST'])
+@app.route('/api/signup/save', methods=['POST'])
 def newSignup():
     id_receive = request.form['id_give']
     pw_receive = request.form['pw_give']
-
     if db.users.find({"id": id_receive}).count() > 0:
         return jsonify({
             "result": "failure",
             "msg": "이미 존재하는 계정입니다."
         })
-
     hashedPw = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
     user = {
         "id": id_receive,
         "hashedPw": hashedPw,
         "postings": [],
     }
-    db.users.insert_one(user)
 
+    db.users.insert_one(user)
     return jsonify({
         'result': 'success',
         "msg": '{id} 회원가입이 완료되었습니다!'.format(id=id)})
 
+
+@app.route('/api/signup/check_dup', methods=['POST'])
+def check_dup():
+    id_receive = request.form['id_give']
+    exists = bool(db.users.find_one({"id": id_receive}))
+    return jsonify({'result': 'success', 'exists': exists})
 
 # login
 
@@ -159,6 +162,7 @@ def apiLogin():
 
 @app.route('/api/logout', methods=['POST'])
 def apiLogout():
+    print(request.cookies.get("mytoken"))
     return jsonify({'result': "success", 'msg': '로그아웃되었습니다'}) if request.cookies.get("mytoken") == None else jsonify({"result": "failure", "msg": "로그아웃에 실패하였습니다."})
 
 
