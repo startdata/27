@@ -88,13 +88,13 @@ p {
   position: fixed;
   height: 25px;
   width: 250px;
-  right: 230px;
+  right: 310px;
   top: 35px;
 }
 
 .login {
   position: fixed;
-  right: 160px;
+  right: 250px;
   font-size: 16px;
   cursor: pointer;
   top: 38px;
@@ -102,7 +102,15 @@ p {
 
 .join {
   position: fixed;
-  right: 80px;
+  right: 170px;
+  font-size: 16px;
+  cursor: pointer;
+  top: 38px;
+}
+
+.mypage {
+  position: fixed;
+  right: 70px;
   font-size: 16px;
   cursor: pointer;
   top: 38px;
