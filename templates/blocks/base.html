@@ -76,13 +76,13 @@
             });
         }
 
-        
         const handleUpload = () => {
+            const url = $("#textfield").val()
             $.ajax({
                 type: "POST",
                 url: "/api/url",
                 data: {
-                    url: 'https://movie.naver.com/movie/bi/mi/basic.naver?code=201680'
+                    url: url
                 },
                 success: function (response) {
                     console.log(response);
@@ -139,7 +139,6 @@
                     </div>
                 </div>
             </section>
-
             <!--movie-list-->
             <section class="list-box">
                 <h2 class="list-title" id="romance">로멘스</h2>
@@ -170,7 +169,6 @@
                         {% endblock%}
                     </div>
                 </div>
-
 
                 <h2 class="list-title" id="ani">애니</h2>
                 <div class="list-btn">

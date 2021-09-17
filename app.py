@@ -30,7 +30,6 @@ def home():
     postings = list(db.postings.find({}))
     for posting in postings:
         posting["_id"] = str(posting["_id"])
-
     # 로그인, 로그아웃 텍스트 바꾸기 위해 토큰 확인
     try:
         token_receive = request.cookies.get('mytoken')
@@ -48,6 +47,16 @@ def login():
 @app.route('/join')
 def singup():
     return render_template('join.html')
+
+
+@app.route('/search')
+def search():
+    title = request.form["title"]
+    foundPosting = db.postings.find_one({"title": title})
+    if foundPosting is None:
+        return jsonify({"result": "failure", "msg": "검색에 실패하였습니다."})
+    else:
+        return render_template("search.html", posting=foundPosting)
 
 
 @app.route('/detail/<postingId>')
