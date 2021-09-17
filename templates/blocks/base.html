@@ -14,16 +14,10 @@
                         <img src="../static/logo.png" alt="moviereview" />
                     </a>
                 </div>
-                <input type="text" id="id" name="id" placeholder="검색" class="form-control" />
                 <div class="login">
                     {% if(isLoggedIn) %} {% set checkLogin = "로그아웃"%} {% else %} {% set
                     checkLogin = "로그인"%} {% endif %}
                     <a href="/login" id="checkLoggedIn">{{checkLogin}}</a>
-                    {% if(isLoggedIn) %}
-                    <div class="mypage">
-                        <a href="/">마이페이지</a>
-                    </div>
-                    {% endif %}
                 </div>
                 {% if(not isLoggedIn) %}
                 <div class="join">
