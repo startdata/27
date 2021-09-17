@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>moviereview</title>
+    <meta name="author" content="27조">
+    <meta name="description" content="Check a review,Find fit your movie">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="">
+    <link rel="apple-touch-icon" href="">
+
+    <!-- Common Css -->
+    <link rel="stylesheet" href="../static/style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+    <link rel="shortcut icon" href="../static/movie.ico">
+
+    <!-- http://ogp.me/ -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="moviereview">
+    <meta property="og:title" content="Check a review,Find fit your movie">
+    <meta property="og:description" content="moviereview site">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+
+    <!-- Optional JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+    </script>
+
+    <!-- Import Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <!-- Javascript -->
+    <script src="../static/jquery-1.12.3.js"></script>
+    <script src="../static/index.js"></script>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+    </script>
+
+    <style>
+        .font {
+            color: #1877F2;
+        }
+    </style>
+</head>
+<div class="wrapper">
+    <header>
+        <div class="top-bar">
+            <span class="nav" onclick="openNav()">&#x2b;</span>
+            <div class="movie-logo">
+                <a class="logo" href="/main" style="cursor:auto">
+                    <img src="../static/logo.png" alt="moviereview">
+                </a>
+            </div>
+            <input type="text" id="search" name="id" onclick="find_word()" placeholder="검색" class="form-control"/>
+
+            <div class="search">
+                <a href="/">검색</a>
+            </div>
+            <div class="login">
+                <a href="/">로그인</a>
+            </div>
+            <div class="join">
+                <a href="/">회원가입</a>
+            </div>
+            <div class="mypage">
+                <a href="/">마이페이지</a>
+            </div>
+
+            <div id="mySidenav" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <a href="#romance">로맨스</a>
+                <a href="#action">액션</a>
+                <a href="#ani">애니</a>
+                <a href="#thriller">스릴러</a>
+            </div>
+        </div>
+    </header>
+    <!-- End of Header -->
+
+    <!-- Main Container -->
+    <body>
+    <section class="main-container">
+        <h1 class="title"><span>관객수 1등 영화</span></h1>
+        <div class="main-box">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Pj7CadRf82k"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            <div class="main-info">
+                <div class="main-name">
+                    <h2 class="title">샹치와 텐 링즈의 전설</h2>
+                    <a class="more-btn" href="/review">리뷰보기</a>
+                </div>
+
+                <div class="main-text">
+                    <p>'텐 링즈’를 차지하는 자, 세상을 지배한다!
+                        초인적인 능력을 가진 ‘텐 링즈’의 힘으로 수세기 동안 어둠의 세상을 지배해 온 ‘웬우’
+                        '샹치’는 아버지 ‘웬우’ 밑에서 암살자로 훈련을 받았지만 이를 거부하고 평범함 삶을 선택한다.
+                        그러나 ‘샹치’는 목숨을 노리는 자들의 습격으로 더 이상 운명을 피할 수 없다는 것을 직감하고,
+                        어머니가 남긴 가족의 비밀과 내면의 신비한 힘을 일깨우게 된다
+                        벗어나고 싶은 과거이자, 그 누구보다 두려운 아버지 ‘웬우’를 마주해야 하는 ‘샹치’
+                        악이 될 것인가? 구원이 될 것인가?</p>
+
+                    <div class="naverlink"><a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=192150"
+                                              target="_blank">보러가기
+                    </a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--movie-list-->
+
+    <section class="list-box">
+        <h2 class="list-title" id="romance">로멘스</h2>
+        <div class="list-btn">
+            <div class="left-btn" id="romance-left"><img src="../static/left.png" alt="좌측버튼"/></div>
+            <div class="right-btn" id="romance-right"><img src="../static/right.png" alt="우측버튼"/></div>
+        </div>
+        <div class="list-over">
+            <div class="list-grid" id="romance-grid">
+                <a href="/romence_one"><img
+                        src="https://movie-phinf.pstatic.net/20210827_68/1630026769778eMjDM_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/romence_two"><img
+                        src="https://movie-phinf.pstatic.net/20210810_289/1628563106681xBLuF_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/romence_three"><img
+                        src="https://movie-phinf.pstatic.net/20210818_151/1629254256149bHEBu_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/romence_four"><img
+                        src="https://movie-phinf.pstatic.net/20210823_224/1629705758527Laio4_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/romence_five"><img
+                        src="https://movie-phinf.pstatic.net/20210826_216/1629939486465RfQzD_JPEG/movie_image.jpg"
+                        alt=""></a>
+            </div>
+        </div>
+
+        <h2 class="list-title" id="action">액션</h2>
+        <div class="list-btn">
+            <div class="left-btn" id="action-left"><img src="../static/left.png" alt="좌측버튼"/></div>
+            <div class="right-btn" id="action-right"><img src="../static/right.png" alt="우측버튼"/></div>
+        </div>
+        <div class="list-over">
+            <div class="list-grid" id="action-grid">
+                <a href="/action_one"><img
+                        src="https://movie-phinf.pstatic.net/20210825_8/1629879510900xEwsL_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/action_two"><img
+                        src="https://movie-phinf.pstatic.net/20210810_48/1628580090915xW3Yd_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/action_three"><img
+                        src="https://movie-phinf.pstatic.net/20210902_277/1630565403668BgRSB_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/action_four"><img
+                        src="https://movie-phinf.pstatic.net/20210714_30/16262486171225Il6s_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/action_five"><img
+                        src="https://movie-phinf.pstatic.net/20210903_120/1630637262749GjJyG_JPEG/movie_image.jpg"
+                        alt=""></a>
+            </div>
+        </div>
+
+
+        <h2 class="list-title" id="ani">애니</h2>
+        <div class="list-btn">
+            <div class="left-btn" id="ani-left"><img src="../static/left.png" alt="좌측버튼"/></div>
+            <div class="right-btn" id="ani-right"><img src="../static/right.png" alt="우측버튼"/></div>
+        </div>
+        <div class="list-over">
+            <div class="list-grid" id="ani-grid">
+                <a href="/ani_one"><img
+                        src="https://movie-phinf.pstatic.net/20210813_188/1628819089886yaWaC_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/ani_two"><img
+                        src="https://movie-phinf.pstatic.net/20210902_69/1630551063783FBxOi_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/ani_three"><img
+                        src="https://movie-phinf.pstatic.net/20210819_75/1629349842810OQ3u0_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/ani_four"><img
+                        src="https://movie-phinf.pstatic.net/20210831_220/1630376391008ok45u_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/ani_five"><img
+                        src="https://movie-phinf.pstatic.net/20171212_172/1513041917211ymzov_JPEG/movie_image.jpg"
+                        alt=""></a>
+            </div>
+        </div>
+
+        <h2 class="list-title" id="thriller">스릴러</h2>
+        <div class="list-btn">
+            <div class="left-btn" id="thriller-left"><img src="../static/left.png" alt="좌측버튼"/></div>
+            <div class="right-btn" id="thriller-right"><img src="../static/right.png" alt="우측버튼"/></div>
+        </div>
+        <div class="list-over">
+            <div class="list-grid" id="thriller-grid">
+                <a href="/thriller_one"><img
+                        src="https://movie-phinf.pstatic.net/20210831_152/1630371935224qy9s6_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/thriller_two"><img
+                        src="https://movie-phinf.pstatic.net/20210820_74/1629427795611LSgpT_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/thriller_three"><img
+                        src="https://movie-phinf.pstatic.net/20210824_39/1629773762036jdIlI_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/thriller_four"><img
+                        src="https://movie-phinf.pstatic.net/20210726_114/1627265960693kkM0B_JPEG/movie_image.jpg"
+                        alt=""></a>
+                <a href="/thriller_five"><img
+                        src="https://movie-phinf.pstatic.net/20210818_108/1629261577888Jpxk1_JPEG/movie_image.jpg"
+                        alt=""></a>
+            </div>
+        </div>
+
+        <div class="list-over">
+            <div id="post_movie" class="list-grid">
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+
+</html>
