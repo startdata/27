@@ -1,11 +1,16 @@
-<!doctype html>
-<html lang="en">
-
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
+{% extends "blocks/base.html" %}
+{% block head %}
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+
+ <!-- Cookie -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    
     <!-- Common Css -->
     <link rel="stylesheet" href="../static/mypage.css">
     <link rel="shortcut icon" href="../static/movie.ico">
@@ -16,12 +21,16 @@
     <title>진심리뷰 마이페이지</title>
 
     <!-- Import Google Font -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700&display=swap"
         rel="stylesheet">
+
+    
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+   
     <style>
         .color {
             color: black;
@@ -37,10 +46,15 @@
         }
     </style>
 
-    <script defer src="../static/java.js"></script>
-    <script defer src="../static/review.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
     <script>
+        window.onload = () => {
+            logInOutBtn = document.getElementById("checkLoggedIn");
+            if (logInOutBtn.textContent === "로그아웃") {
+                logInOutBtn.addEventListener("click", handleLogout);
+            }
+        }
         /*네비게이션*/
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
@@ -98,35 +112,44 @@
                 },
             });
         }
-    </script>
-</head>
 
-<body>
-    <div class="wrapper">
-        <header>
-            <div class="top-bar">
-                <span class="nav" onclick="openNav()">&#x2b;</span>
-                <div class="movie-logo">
-                    <a class="logo" href="/main" style="cursor:auto">
-                        <img src="../static/logo.png" alt="HanSon-movie">
-                    </a>
-                </div>
-                <textarea id="search" type="text" class="form-control" placeholder="검색" aria-label="Default"></textarea>
-                <div class="mypage">
-                    <a href="/">마이페이지</a>
-                </div>
-                <div class="logout">
-                    <a href="/">로그아웃</a>
-                </div>
-                <div id="mySidenav" class="sidenav">
-                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-                    <a href="/romence">로맨스</a>
-                    <a href="/action">액션</a>
-                    <a href="/ani">애니</a>
-                    <a href="/thriller">스릴러</a>
-                </div>
-            </div>
-        </header>
+        const handleUpload = () => {
+            const url = $("#textfield").val()
+            $.ajax({
+                type: "POST",
+                url: "/api/url",
+                data: {
+                    url: url
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+            });
+        }
+        
+        const handleLogout = (e) => {
+            e.preventDefault();
+            $.removeCookie("mytoken", { path: '/' });
+            $.ajax({
+                type: "POST",
+                url: "/api/logout",
+                data: {},
+                success: function (response) {
+                    if(response["result"] == "success") {
+                        alert('로그아웃 되었습니다!');
+                        location.reload();
+                    }
+                    else {
+                        alert("로그아웃 실패");
+                    }
+                },
+            });
+        }
+    </script>
+{% endblock  %}
+
+{% block body %}
+
         <!-- End of Header -->
 
         <!-- Main Container -->
@@ -165,7 +188,7 @@
                             {% for comment in posting["comments"]%}
                             {% set author = comment["author"]%}
                             {% set message = comment["message"]%}
-                                <div class="commentContainer">
+                                <div class="commentContainer" id>
                                     <h1 class="comment-author">{{author}}</h1>
                                     <p>{{message}}</p>
                                 <form>
@@ -176,6 +199,4 @@
                     </div>
                 </div>
         </section>
-</body>
-
-</html>
+{% endblock  %}

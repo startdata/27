@@ -1,31 +1,201 @@
-{% extends "blocks/base.html" %} {% block navbar %}
-<span class="nav" onclick="openNav()">&#x2b;</span>
-<div class="movie-logo">
-  <a class="logo" href="/" style="cursor: auto">
-    <img src="../static/logo.png" alt="moviereview" />
-  </a>
-</div>
-<input type="text" id="id" name="id" placeholder="검색" class="form-control" />
-<div class="login">
-  {% if(isLoggedIn) %} {% set checkLogin = "로그아웃"%} {% else %} {% set
-  checkLogin = "로그인"%} {% endif %}
-  <a href="/login" id="checkLoggedIn">{{checkLogin}}</a>
-  {% if(isLoggedIn) %}
-  <div class="mypage">
-    <a href="/">마이페이지</a>
-  </div>
-  {% endif %}
-</div>
-{% if(not isLoggedIn) %}
-<div class="join">
-  <a href="/join">회원가입</a>
-</div>
-{% endif %} {% endblock%} {% block anime%} {% for posting in postings %} {% if
-("애니메이션" in posting["genres"]) %} {% set imgUrl = posting["imageUrl"]%} {%
-set url = posting["url"]%}
-<a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
-{% endif %} {% endfor %}{% endblock%} {% block action %} {% for posting in
-postings %} {% if ("액션" in posting["genres"]) %} {% set imgUrl =
-posting["imageUrl"]%} {% set url = posting["url"]%}
-<a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
-{% endif %} {% endfor %}{% endblock%}
+{% extends "blocks/base.html" %} {% block head %}
+<meta charset="UTF-8">
+    <title>moviereview</title>
+    <meta name="author" content="27조">
+    <meta name="description" content="Check a review,Find fit your movie">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="">
+    <link rel="apple-touch-icon" href="">
+
+    <!-- Common Css -->
+    <link rel="stylesheet" href="../static/style.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+    <link rel="shortcut icon" href="../static/movie.ico">
+
+    <!-- http://ogp.me/ -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="moviereview">
+    <meta property="og:title" content="Check a review,Find fit your movie">
+    <meta property="og:description" content="moviereview site">
+    <meta property="og:image" content="">
+    <meta property="og:url" content="">
+    <!-- Javascript -->
+    <script defer src="../static/animation.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
+    </script>
+    <!-- Cookie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js">
+    </script>
+    <!-- Optional JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+        </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+        </script>
+
+
+    <!-- Import Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <script>
+        window.onload = () => {
+            logInOutBtn = document.getElementById("checkLoggedIn");
+            if (logInOutBtn.textContent === "로그아웃") {
+                logInOutBtn.addEventListener("click", handleLogout);
+            }
+        }
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        const handleLogout = (e) => {
+            e.preventDefault();
+            $.removeCookie("mytoken");
+            $.ajax({
+                type: "POST",
+                url: "/api/logout",
+                data: {},
+                success: function (response) {
+                    alert('로그아웃 되었습니다!')
+                    location.reload();
+                },
+            });
+        }
+
+        const handleUpload = () => {
+            const url = $("#textfield").val()
+            $.ajax({
+                type: "POST",
+                url: "/api/url",
+                data: {
+                    url: url
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+            });
+        }
+    </script>
+
+    <style>
+        .font {
+            color: #1877F2;
+        }
+    </style>
+{% endblock %} 
+
+{% block body %}
+<section class="main-container">
+                <h1 class="title"><span>관객수 1등 영화</span></h1>
+                <div class="main-box">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/Pj7CadRf82k"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                    <div class="main-info">
+                        <div class="main-name">
+                            <h2 class="title">샹치와 텐 링즈의 전설</h2>
+                            <a class="more-btn" href="/review">리뷰보기</a>
+                        </div>
+
+                        <div class="main-text">
+                            <p>'텐 링즈’를 차지하는 자, 세상을 지배한다!
+                                초인적인 능력을 가진 ‘텐 링즈’의 힘으로 수세기 동안 어둠의 세상을 지배해 온 ‘웬우’
+                                '샹치’는 아버지 ‘웬우’ 밑에서 암살자로 훈련을 받았지만 이를 거부하고 평범함 삶을 선택한다.
+                                그러나 ‘샹치’는 목숨을 노리는 자들의 습격으로 더 이상 운명을 피할 수 없다는 것을 직감하고,
+                                어머니가 남긴 가족의 비밀과 내면의 신비한 힘을 일깨우게 된다
+                                벗어나고 싶은 과거이자, 그 누구보다 두려운 아버지 ‘웬우’를 마주해야 하는 ‘샹치’
+                                악이 될 것인가? 구원이 될 것인가?</p>
+
+                            <div class="naverlink"><a href="https://movie.naver.com/movie/bi/mi/basic.naver?code=192150"
+                                    target="_blank">보러가기
+                                </a></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--movie-list-->
+            <section class="list-box">
+                <h2 class="list-title" id="romance">로멘스</h2>
+                <div class="list-btn">
+                    <div class="left-btn" id="romance-left"><img src="../static/left.png" alt="좌측버튼" /></div>
+                    <div class="right-btn" id="romance-right"><img src="../static/right.png" alt="우측버튼" /></div>
+                </div>
+                <div class="list-over">
+                    <div class="list-grid" id="romance-grid">
+                        {% for posting in postings %}
+                        {% if ("로맨스" in posting["genres"]) %}
+                        {% set imgUrl = posting["imageUrl"]%}
+                        {% set url = posting["url"]%}
+                        <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt=""></a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <h2 class="list-title" id="action">액션</h2>
+                <div class="list-btn">
+                    <div class="left-btn" id="action-left"><img src="../static/left.png" alt="좌측버튼" /></div>
+                    <div class="right-btn" id="action-right"><img src="../static/right.png" alt="우측버튼" /></div>
+                </div>
+                <div class="list-over">
+                    <div class="list-grid" id="action-grid">
+                        {% for posting in
+                        postings %} {% if ("액션" in posting["genres"]) %} {% set imgUrl =
+                        posting["imageUrl"]%} {% set url = posting["url"]%}
+                        <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
+                        {% endif %} {% endfor %}
+                    </div>
+                </div>
+
+                <h2 class="list-title" id="ani">애니</h2>
+                <div class="list-btn">
+                    <div class="left-btn" id="ani-left"><img src="../static/left.png" alt="좌측버튼" /></div>
+                    <div class="right-btn" id="ani-right"><img src="../static/right.png" alt="우측버튼" /></div>
+                </div>
+                <div class="list-over">
+                    <div class="list-grid" id="ani-grid">
+                        {% for posting in postings %} {% if ("애니메이션"
+                        in posting["genres"]) %} {% set imgUrl = posting["imageUrl"]%} {% set url =
+                        posting["url"]%}
+                        <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
+                        {% endif %} {% endfor %}
+                    </div>
+                </div>
+
+                <h2 class="list-title" id="thriller">스릴러</h2>
+                <div class="list-btn">
+                    <div class="left-btn" id="thriller-left"><img src="../static/left.png" alt="좌측버튼" /></div>
+                    <div class="right-btn" id="thriller-right"><img src="../static/right.png" alt="우측버튼" /></div>
+                </div>
+                <div class="list-over">
+                    <div class="list-grid" id="thriller-grid">
+                        {% for posting in postings %}
+                        {% if ("스릴러" in posting["genres"]) %}
+                        {% set imgUrl = posting["imageUrl"]%}
+                        {% set url = posting["url"]%}
+                        <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt=""></a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="list-over">
+                    <div id="post_movie" class="list-grid">
+                    </div>
+                </div>
+            </section>
+    </div>
+{% endblock  %}
