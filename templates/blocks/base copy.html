@@ -1,5 +1,8 @@
-{% extends "blocks/base.html" %} {% block head %}
-<meta charset="UTF-8">
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
     <title>moviereview</title>
     <meta name="author" content="27조">
     <meta name="description" content="Check a review,Find fit your movie">
@@ -9,8 +12,8 @@
     <link rel="apple-touch-icon" href="">
 
     <!-- Common Css -->
-    <link rel="stylesheet" href="../static/style.css" />
-
+    {% block style %}
+    {% endblock  %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
     <link rel="shortcut icon" href="../static/movie.ico">
 
@@ -46,12 +49,12 @@
 
 
     <script>
-        window.onload = () => {
-            logInOutBtn = document.getElementById("checkLoggedIn");
-            if (logInOutBtn.textContent === "로그아웃") {
-                logInOutBtn.addEventListener("click", handleLogout);
-            }
+    window.onload = () => {
+        logInOutBtn = document.getElementById("checkLoggedIn");
+        if(logInOutBtn.textContent === "로그아웃"){
+            logInOutBtn.addEventListener("click", handleLogout);
         }
+    }
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
         }
@@ -73,6 +76,20 @@
                 },
             });
         }
+
+        const handleUpload = () => {
+            const url = $("#textfield").val()
+            $.ajax({
+                type: "POST",
+                url: "/api/url",
+                data: {
+                    url: url
+                },
+                success: function (response) {
+                    console.log(response);
+                },
+            });
+        }
     </script>
 
     <style>
@@ -80,10 +97,21 @@
             color: #1877F2;
         }
     </style>
-{% endblock %} 
+</head>
+<header>
+    <div class="wrapper">
+        <header>
+            <div class="top-bar">
+                {% block navbar %}
+                {% endblock%}
+            </div>
+        </header>
+        <!-- End of Header -->
 
-{% block body %}
-<section class="main-container">
+        <!-- Main Container -->
+
+        <body>
+            <section class="main-container">
                 <h1 class="title"><span>관객수 1등 영화</span></h1>
                 <div class="main-box">
                     <iframe width="560" height="315" src="https://www.youtube.com/embed/Pj7CadRf82k"
@@ -122,7 +150,7 @@
                 <div class="list-over">
                     <div class="list-grid" id="romance-grid">
                         {% for posting in postings %}
-                        {% if ("멜로/로맨스" in posting["genres"]) %}
+                        {% if ("로맨스" in posting["genres"]) %}
                         {% set imgUrl = posting["imageUrl"]%}
                         {% set url = posting["url"]%}
                         <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt=""></a>
@@ -138,11 +166,8 @@
                 </div>
                 <div class="list-over">
                     <div class="list-grid" id="action-grid">
-                        {% for posting in
-                        postings %} {% if ("액션" in posting["genres"]) %} {% set imgUrl =
-                        posting["imageUrl"]%} {% set url = posting["url"]%}
-                        <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
-                        {% endif %} {% endfor %}
+                        {% block action %}
+                        {% endblock%}
                     </div>
                 </div>
 
@@ -153,11 +178,8 @@
                 </div>
                 <div class="list-over">
                     <div class="list-grid" id="ani-grid">
-                        {% for posting in postings %} {% if ("애니메이션"
-                        in posting["genres"]) %} {% set imgUrl = posting["imageUrl"]%} {% set url =
-                        posting["url"]%}
-                        <a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
-                        {% endif %} {% endfor %}
+                        {%block anime%}
+                        {% endblock%}
                     </div>
                 </div>
 
@@ -184,4 +206,6 @@
                 </div>
             </section>
     </div>
-{% endblock  %}
+    </body>
+
+</html>

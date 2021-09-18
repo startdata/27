@@ -13,12 +13,8 @@ from werkzeug.utils import redirect
 
 app = Flask(__name__)
 
-# client = MongoClient('localhost', 27017)
-# db = client.dbsparta
-
-client = MongoClient('mongodb:team27:team27@localhos', 27017)
-db = client.truelymovie
-
+client = MongoClient('localhost', 27017)
+db = client.dbsparta
 
 SECRET_KEY = "SPARTA"
 
@@ -27,31 +23,6 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
 
 # route
-
-
-@app.route('/')
-def home():
-    postings = list(db.postings.find({}))
-    for posting in postings:
-        posting["_id"] = str(posting["_id"])
-    # 로그인, 로그아웃 텍스트 바꾸기 위해 토큰 확인
-    try:
-        token_receive = request.cookies.get('mytoken')
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        userAccount = payload["id"]
-        return render_template('main.html', postings=postings, isLoggedIn=True, userAccount=userAccount)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('main.html', postings=postings, isLoggedIn=False)
-
-
-@app.route('/login')
-def login():
-    return render_template("login.html")
-
-
-@app.route('/signup')
-def singup():
-    return render_template('signup.html')
 
 
 @app.route('/search')
@@ -75,14 +46,6 @@ def detail(postingId):
         return render_template('detail.html', posting=posting, isLoggedIn=True)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-
-
-@app.route('/mypage/<userAccount>')
-def mypage(userAccount):
-    myPostings = list(db.postings.find({"owner": userAccount}))
-    for posting in myPostings:
-        posting["_id"] = str(posting["_id"])
-    return render_template("mypage.html", myPostings=myPostings)
 
 # add like
 
@@ -193,8 +156,8 @@ def apiPosting():
         '#content > div.article > div.mv_info_area > div.mv_info > h3 > a:nth-child(1)').text
 
     # 중복 확인
-    if db.postings.find({"title": title}).count() > 0:
-        return redirect(url_for("home"))
+    # if db.postings.find({"title": title}) != None:
+    #     return redirect(url_for("home"))
 
     description = soup.select_one(
         '#content > div.article > div.section_group.section_group_frst > div:nth-child(1) > div > div.story_area > p').text
@@ -234,24 +197,23 @@ def apiPosting():
 
 @app.route('/api/delete', methods=['POST'])
 def apiDelete():
-    print(request.form)
-    # # postingId = request.form['postingId']
-    # # 현재 접속중인 사람이 누군지 알기 위해서 토큰 복호화
-    # token = request.cookies.get('mytoken')
-    # payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-    # user = db.users.find_one({"id": payload['id']})
-    # # 쿼리에 dictionary 타입을 쓸 수 없는데, 그래서 ObjectId 타입을 string으로 변환
-    # # 그리고 그걸 다시 ObjectId 타입으로 변환해서 쿼리에 사용
-    # # postId = str(post['_id'])
-    # # db.postings.delete_one(post)
-    # db.postings.find_one_and_delete(
-    #     {"_id": ObjectId(postingId), "owner": user["id"]})
+    title = request.form['title']
+    # 현재 접속중인 사람이 누군지 알기 위해서 토큰 복호화
+    token = request.cookies.get('mytoken')
+    payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+    user = db.users.find_one({"id": payload['id']})
+    # 쿼리에 dictionary 타입을 쓸 수 없는데, 그래서 ObjectId 타입을 string으로 변환
+    # 그리고 그걸 다시 ObjectId 타입으로 변환해서 쿼리에 사용
+    # postId = str(post['_id'])
+    # db.postings.delete_one(post)
+    db.postings.find_one_and_delete(
+        {"title": title, "owner": user["id"]})
 
-    # db.users.find_one_and_update({"id": user["id"]}, {"$pull": {
-    #     "postings": {"_id": ObjectId(postingId)}
-    # }})
+    db.users.find_one_and_update({"id": user["id"]}, {"$pull": {
+        "postings": {"title": title}
+    }})
 
-    return jsonify({"result": "success", 'msg': '삭제되었습니다.'})
+    return jsonify({"result": "success", 'msg': '{target} 삭제되었습니다.'.format(target=title)})
 
 # Add comment
 

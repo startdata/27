@@ -11,7 +11,7 @@
                 <span class="nav" onclick="openNav()">&#x2b;</span>
                 <div class="movie-logo">
                     <a class="logo" href="/" style="cursor: auto">
-                        <img src="../static/logo.png" alt="moviereview" />
+                        <img src="../static/movie.png" alt="moviereview" />
                     </a>
                 </div>
                 <div class="login">
@@ -24,6 +24,11 @@
                     <a href="/signup">회원가입</a>
                 </div>
                 {% endif %}
+                {% if(isLoggedIn) %}
+                <div class="join">
+                    <a href="/mypage/{{userAccount}}">마이페이지</a>
+                </div>
+                {% endif%}
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <a href="/romence">로맨스</a>

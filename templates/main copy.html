@@ -1,0 +1,41 @@
+{% extends "blocks/base.html" %} {% block style %}
+<link rel="stylesheet" href="../static/style.css" />
+{% endblock %} {% block navbar %}
+<span class="nav" onclick="openNav()">&#x2b;</span>
+<div class="movie-logo">
+  <a class="logo" href="/" style="cursor: auto">
+    <img src="../static/logo.png" alt="moviereview" />
+  </a>
+</div>
+<input type="text" id="id" name="id" placeholder="검색" class="form-control" />
+<div class="login">
+  {% if(isLoggedIn) %} {% set checkLogin = "로그아웃"%} {% else %} {% set
+  checkLogin = "로그인"%} {% endif %}
+  <a href="/login" id="checkLoggedIn">{{checkLogin}}</a>
+  {% if(isLoggedIn) %}
+  <div class="mypage">
+    <a href="/">마이페이지</a>
+  </div>
+  {% endif %}
+</div>
+{% if(not isLoggedIn) %}
+<div class="join">
+  <a href="/signup">회원가입</a>
+</div>
+{% endif %}
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <a href="/romence">로맨스</a>
+  <a href="/action">액션</a>
+  <a href="/ani">애니</a>
+  <a href="/thriller">스릴러</a>
+</div>
+{% endblock%} {% block anime%} {% for posting in postings %} {% if ("애니메이션"
+in posting["genres"]) %} {% set imgUrl = posting["imageUrl"]%} {% set url =
+posting["url"]%}
+<a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
+{% endif %} {% endfor %}{% endblock%} {% block action %} {% for posting in
+postings %} {% if ("액션" in posting["genres"]) %} {% set imgUrl =
+posting["imageUrl"]%} {% set url = posting["url"]%}
+<a href="/detail/{{posting['_id']}}"><img src="{{imgUrl}}" alt="" /></a>
+{% endif %} {% endfor %}{% endblock%}
