@@ -13,17 +13,34 @@ from werkzeug.utils import redirect
 
 app = Flask(__name__)
 
-# client = MongoClient('localhost', 27017)
-# db = client.dbsparta
+client = MongoClient('localhost', 27017)
+db = client.dbsparta
 
-client = MongoClient('mongodb://team27:team27@localhost', 27017)
-db = client.truelymovie
+# client = MongoClient('mongodb://team27:team27@localhost', 27017)
+# db = client.truelymovie
 
 SECRET_KEY = "SPARTA"
 
 # Web Crawling
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+
+# define common function
+
+
+def userAuth(token):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        auth = {
+            "isLoggedIn": True,
+            "payload": payload
+        }
+        return auth
+    except:
+        auth = {
+            "isLoggedIn": False,
+        }
+        return auth
 
 # route
 
@@ -34,13 +51,8 @@ def home():
     for posting in postings:
         posting["_id"] = str(posting["_id"])
     # 로그인, 로그아웃 텍스트 바꾸기 위해 토큰 확인
-    try:
-        token_receive = request.cookies.get('mytoken')
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        userAccount = payload["id"]
-        return render_template('main.html', postings=postings, isLoggedIn=True, userAccount=userAccount)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return render_template('main.html', postings=postings, isLoggedIn=False)
+    result = userAuth(request.cookies.get("mytoken"))
+    return render_template("main.html", postings=postings, isLoggedIn=result["isLoggedIn"], userAccount=result["payload"]["id"]) if result["isLoggedIn"] == True else render_template('main.html', postings=postings, isLoggedIn=result["isLoggedIn"])
 
 
 @app.route('/login')
@@ -65,23 +77,29 @@ def search():
 
 @app.route('/detail/<postingId>')
 def detail(postingId):
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+    # if not logged in, redirect
+    auth = userAuth(request.cookies.get("mytoken"))
+    if(auth["isLoggedIn"]):
         posting = db.postings.find_one({"_id": ObjectId(postingId)})
-        # 좋아요 수 변경
-        # print(posting)
         return render_template('detail.html', posting=posting, isLoggedIn=True)
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
+    return redirect(url_for("login"))
 
 
 @app.route('/mypage/<userAccount>')
 def mypage(userAccount):
-    myPostings = list(db.postings.find({"owner": userAccount}))
-    for posting in myPostings:
-        posting["_id"] = str(posting["_id"])
-    return render_template("mypage.html", myPostings=myPostings)
+    # 토큰 유효성 확인 -> 토큰 id랑 사용자 페이지 id 가 같은지 비교
+    auth = userAuth(request.cookies.get("mytoken"))
+    if(auth["isLoggedIn"]):
+        if(auth["payload"]["id"] == userAccount):
+            myPostings = list(db.postings.find({"owner": userAccount}))
+            for posting in myPostings:
+                posting["_id"] = str(posting["_id"])
+            return render_template("mypage.html", myPostings=myPostings)
+        else:
+            return redirect(url_for("home"))
+    else:
+        return redirect(url_for("login"))
+
 
 # add like
 
