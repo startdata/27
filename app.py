@@ -16,9 +16,8 @@ app = Flask(__name__)
 # client = MongoClient('localhost', 27017)
 # db = client.dbsparta
 
-client = MongoClient('mongodb:team27:team27@localhos', 27017)
+client = MongoClient('mongodb://team27:team27@localhost', 27017)
 db = client.truelymovie
-
 
 SECRET_KEY = "SPARTA"
 
